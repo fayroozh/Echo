@@ -1,0 +1,323 @@
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ======================================
+   1. الإعدادات الأساسية
+====================================== */
+@layer base {
+    html {
+        font-family: 'Tajawal', sans-serif;
+    }
+    
+    /* تحسين مظهر النصوص العربية */
+    body {
+        text-align: right;
+    }
+   
+    /* إصلاحات الوضع الليلي */
+    .dark body {
+        @apply bg-black text-gray-100;
+    }
+    
+    .dark .bg-white {
+        @apply bg-gray-800 !important;
+    }
+    
+    .dark .text-gray-800 {
+        @apply text-gray-200 !important;
+    }
+    
+    .dark .border-gray-200 {
+        @apply border-gray-700 !important;
+    }
+    
+    /* تحسين وضوح النصوص في الوضع النهاري */
+    .text-gray-700 {
+        @apply text-gray-800;
+    }
+    
+    /* إصلاحات إضافية للوضع الليلي */
+    .dark .quote-card {
+        @apply bg-gray-800 border-blue-400 !important;
+    }
+
+    .dark input,
+    .dark textarea,
+    .dark select {
+        @apply bg-gray-700 border-gray-600 text-gray-100 !important;
+    }
+}
+
+/* ======================================
+   2. المكونات الأساسية
+====================================== */
+@layer components {
+    /* --- الأزرار --- */
+    .btn {
+        @apply px-4 py-2 rounded-lg transition-all duration-200 font-medium transform hover:scale-105;
+    }
+    
+    .btn-primary {
+        @apply bg-blue-600 text-white hover:bg-blue-700;
+    }
+    
+    .btn-secondary {
+        @apply bg-gray-200 text-gray-800 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600;
+    }
+    
+    /* --- البطاقات --- */
+    .card {
+        @apply bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow duration-200 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200;
+    }
+    
+    /* --- بطاقات الاقتباسات --- */
+    .quote-card {
+        @apply bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 border-r-4 border-blue-500 dark:border-blue-400 hover:shadow-lg transition-all duration-300;
+    }
+    
+    .quote-card-featured {
+        @apply bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border-r-4 border-blue-500 dark:border-blue-400 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:border-r-8;
+    }
+    
+    /* --- أزرار التفاعل --- */
+    .reaction-btn {
+        @apply inline-flex items-center px-3 py-1 rounded-full text-sm font-medium transition-all duration-200 hover:shadow-sm;
+    }
+    
+    .reaction-btn-like {
+        @apply bg-blue-100 text-blue-800 hover:bg-blue-200 dark:bg-blue-900 dark:text-blue-200 dark:hover:bg-blue-800;
+    }
+    
+    .reaction-btn-happy {
+        @apply bg-yellow-100 text-yellow-800 hover:bg-yellow-200 dark:bg-yellow-900 dark:text-yellow-200 dark:hover:bg-yellow-800;
+    }
+    
+    .reaction-btn-sad {
+        @apply bg-indigo-100 text-indigo-800 hover:bg-indigo-200 dark:bg-indigo-900 dark:text-indigo-200 dark:hover:bg-indigo-800;
+    }
+    
+    .reaction-btn-love {
+        @apply bg-red-100 text-red-800 hover:bg-red-200 dark:bg-red-900 dark:text-red-200 dark:hover:bg-red-800;
+    }
+    
+    .reaction-btn-wow {
+        @apply bg-purple-100 text-purple-800 hover:bg-purple-200 dark:bg-purple-900 dark:text-purple-200 dark:hover:bg-purple-800;
+    }
+    
+    .reaction-btn-broken {
+        @apply bg-pink-100 text-pink-800 hover:bg-pink-200 dark:bg-pink-900 dark:text-pink-200 dark:hover:bg-pink-800;
+    }
+    
+    /* --- المفضلة --- */
+    .favorite-star {
+        @apply text-yellow-500 hover:text-yellow-600 transition-colors duration-200;
+    }
+    
+    .favorite-star-active {
+        @apply text-yellow-500;
+    }
+    
+    .favorite-star-inactive {
+        @apply text-gray-400 hover:text-yellow-500;
+    }
+    
+    /* --- قسم التعليقات --- */
+    .comments-section {
+        @apply mt-4 overflow-hidden transition-all duration-300;
+    }
+    
+    .comments-section.collapsed {
+        @apply max-h-0;
+    }
+    
+    .comments-section.expanded {
+        @apply max-h-96;
+    }
+    
+    /* --- معلومات الناشر --- */
+    .publisher-info {
+        @apply flex items-center mb-4;
+    }
+    
+    .publisher-avatar {
+        @apply w-10 h-10 rounded-full object-cover mr-3;
+    }
+    
+    .publisher-name {
+        @apply text-sm font-medium text-gray-700 dark:text-gray-300;
+    }
+    
+    /* --- الشريط العلوي --- */
+    .top-nav {
+        @apply bg-white dark:bg-gray-800 shadow-md border-b border-gray-200 dark:border-gray-700 transition-all duration-300;
+    }
+    
+    /* --- الفوتر --- */
+    .site-footer {
+        @apply py-8 bg-gray-50 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700;
+    }
+    
+    /* --- الصور الشخصية --- */
+    .profile-image {
+        @apply rounded-full border-2 border-white dark:border-gray-700 shadow-md;
+    }
+}
+
+/* ======================================
+   3. تحسينات الصفحة الرئيسية
+====================================== */
+@layer components {
+    /* --- قسم Hero --- */
+    .hero-section {
+        @apply py-16 bg-gradient-to-br from-blue-500 to-purple-600 dark:from-blue-800 dark:to-purple-900 text-white;
+    }
+    
+    .hero-title {
+        @apply text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight mb-4 text-white;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+    
+    .hero-subtitle {
+        @apply text-xl md:text-2xl font-medium text-blue-100 dark:text-blue-200 mb-8 max-w-2xl mx-auto;
+    }
+    
+    .hero-btn {
+        @apply px-8 py-3 text-lg font-medium rounded-full bg-white text-blue-600 hover:bg-blue-50 transition-all transform hover:scale-105 hover:shadow-lg;
+    }
+    
+    /* --- قسم الميزات --- */
+    .feature-card {
+        @apply bg-white dark:bg-gray-700 p-6 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 border-t-4 border-blue-500 dark:border-blue-400;
+    }
+    
+    .feature-icon {
+        @apply text-blue-600 dark:text-blue-400 mb-4 bg-blue-100 dark:bg-blue-900 p-3 rounded-full inline-block;
+    }
+    
+    /* --- قسم CTA --- */
+    .cta-section {
+        @apply py-16 bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-800 dark:to-gray-900;
+    }
+    
+    .cta-btn-primary {
+        @apply px-6 py-3 bg-blue-600 text-white rounded-full font-medium hover:bg-blue-700 transition-all transform hover:scale-105 hover:shadow-lg;
+    }
+    
+    .cta-btn-secondary {
+        @apply px-6 py-3 bg-white text-blue-600 rounded-full font-medium border border-blue-200 hover:bg-blue-50 transition-all transform hover:scale-105 hover:shadow-lg dark:bg-gray-800 dark:text-blue-400 dark:border-blue-800 dark:hover:bg-gray-700;
+    }
+}
+
+/* ======================================
+   4. التأثيرات الحركية
+====================================== */
+@layer utilities {
+    /* --- تأثير الطفو --- */
+    .animate-float {
+        animation: float 3s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+        100% { transform: translateY(0px); }
+    }
+}
+
+/* ======================================
+   5. تحسينات الأجهزة المحمولة
+====================================== */
+@media (max-width: 640px) {
+    .hero-btn {
+        @apply w-full mb-2;
+    }
+    
+    .cta-btn-primary, .cta-btn-secondary {
+        @apply w-full mb-2;
+    }
+}
+
+/* ======================================
+   6. إصلاحات الوضع الليلي
+====================================== */
+.dark .quote-card {
+    @apply bg-gray-800 border-blue-400 !important;
+}
+
+.dark input,
+.dark textarea,
+.dark select {
+    @apply bg-gray-700 border-gray-600 text-gray-100 !important;
+}
+
+/* الإشعارات المنبثقة */
+@layer components {
+    @keyframes fadeInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    @keyframes fadeOut {
+        from {
+            opacity: 1;
+        }
+        to {
+            opacity: 0;
+        }
+    }
+    
+    .animate-fade-in-down {
+        animation: fadeInDown 0.3s ease-out forwards;
+    }
+    
+    .animate-fade-out {
+        animation: fadeOut 0.3s ease-out forwards;
+    }
+}
+
+/* أزرار المشاركة الاجتماعية */
+@layer components {
+    .share-btn {
+        @apply transition-all duration-300 font-medium;
+    }
+    
+    .share-facebook {
+        @apply bg-[#3b5998] hover:bg-[#324b80];
+    }
+    
+    .share-twitter {
+        @apply bg-[#1da1f2] hover:bg-[#0d8ecf];
+    }
+    
+    .share-whatsapp {
+        @apply bg-[#25d366] hover:bg-[#20bd5a];
+    }
+    
+    .share-telegram {
+        @apply bg-[#0088cc] hover:bg-[#0077b3];
+    }
+    
+    .share-linkedin {
+        @apply bg-[#0077b5] hover:bg-[#006399];
+    }
+    
+    .share-pinterest {
+        @apply bg-[#bd081c] hover:bg-[#a50718];
+    }
+    
+    .share-reddit {
+        @apply bg-[#ff4500] hover:bg-[#e03d00];
+    }
+    .hero-btn-secondary {
+        @apply px-6 py-3 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white rounded-lg font-bold hover:bg-gray-300 dark:hover:bg-gray-600 transition-all duration-300 shadow-md;
+    }
+}
