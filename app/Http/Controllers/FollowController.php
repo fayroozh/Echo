@@ -16,12 +16,12 @@ class FollowController extends Controller
     public function toggleFollow(User $user)
     {
         $currentUser = auth()->user();
-        
-        if ($currentUser->following()->where('following_id', $user->id)->exists()) {
+
+        if ($currentUser->isFollowing($user)) {
             $currentUser->following()->detach($user->id);
             return back()->with('success', 'تم إلغاء المتابعة بنجاح');
         }
-        
+
         $currentUser->following()->attach($user->id);
         return back()->with('success', 'تمت المتابعة بنجاح');
     }
@@ -32,16 +32,26 @@ class FollowController extends Controller
         if ($authUser->isFollowing($user)) {
             // إذا المتابع، الغي المتابعة
             $authUser->following()->detach($user->id);
-            $message = 'تم إلغاء المتابعة';
+            $message = 'تم إلغاء المتابعة بنجاح';
         } else {
             // إذا غير متابع، تابع
             $authUser->following()->attach($user->id);
-            $message = 'تم المتابعة';
+
+            // إرسال إشعار للمستخدم المتابع (إذا كان موجود)
+            try {
+                if (class_exists('\App\Notifications\NewFollower')) {
+                    $user->notify(new \App\Notifications\NewFollower($authUser));
+                }
+            } catch (\Exception $e) {
+                // تجاهل الأخطاء في الإشعارات
+            }
+
+            $message = 'تمت المتابعة بنجاح';
         }
 
-        return back()->with('status', $message);
+        return back()->with('success', $message);
     }
-    
+
     /**
      * عرض قائمة المتابِعين
      */
@@ -49,10 +59,10 @@ class FollowController extends Controller
     {
         $user = $userId ? User::findOrFail($userId) : Auth::user();
         $followers = $user->followers()->with('follower')->latest()->paginate(20);
-        
+
         return view('follows.followers', compact('user', 'followers'));
     }
-    
+
     /**
      * عرض قائمة المتابَعين
      */
@@ -60,7 +70,29 @@ class FollowController extends Controller
     {
         $user = $userId ? User::findOrFail($userId) : Auth::user();
         $following = $user->following()->with('following')->latest()->paginate(20);
-        
+
+        return view('follows.following', compact('user', 'following'));
+    }
+
+    /**
+     * عرض قائمة المتابعين للمستخدم الحالي
+     */
+    public function myFollowers()
+    {
+        $user = Auth::user();
+        $followers = $user->followers()->latest()->paginate(20);
+
+        return view('follows.followers', compact('user', 'followers'));
+    }
+
+    /**
+     * عرض قائمة المتابَعين للمستخدم الحالي
+     */
+    public function myFollowing()
+    {
+        $user = Auth::user();
+        $following = $user->following()->latest()->paginate(20);
+
         return view('follows.following', compact('user', 'following'));
     }
 }

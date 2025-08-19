@@ -69,4 +69,39 @@ class AdminMessageController extends Controller
         return redirect()->route('admin.messages.show', $adminMessage)
             ->with('success', 'تم تحديث حالة القراءة بنجاح');
     }
+
+    /**
+     * Show contact form for regular users to send messages to admin.
+     */
+    public function contactForm()
+    {
+        return view('admin.messages.contact-form');
+    }
+
+    /**
+     * Send message from regular user to admin.
+     */
+    public function sendMessage(Request $request)
+    {
+        $request->validate([
+            'subject' => 'required|string|max:255',
+            'message' => 'required|string|max:1000',
+        ]);
+
+        // إرسال الرسالة لجميع المشرفين
+        $admins = User::where('is_admin', true)->get();
+        
+        foreach ($admins as $admin) {
+            AdminMessage::create([
+                'user_id' => $admin->id,
+                'subject' => $request->subject,
+                'message' => $request->message,
+                'is_read' => false,
+                'from_user_id' => auth()->id(), // إضافة معرف المستخدم المرسل
+            ]);
+        }
+
+        return redirect()->route('contact-admin')
+            ->with('success', 'تم إرسال رسالتك للمشرف بنجاح');
+    }
 }

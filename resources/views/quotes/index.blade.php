@@ -361,6 +361,7 @@
     </div>
 
     <!-- نافذة إضافة اقتباس -->
+    <!-- نافذة إضافة اقتباس -->
     <div id="addQuoteModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
         <div class="bg-white dark:bg-gray-800 rounded-xl max-w-xl w-full overflow-hidden">
             <div class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
@@ -412,6 +413,37 @@
         function closeAddQuoteModal() {
             document.getElementById('addQuoteModal').classList.add('hidden');
             document.body.style.overflow = 'auto';
+        }
+
+        // إرسال نموذج إضافة اقتباس باستخدام AJAX
+        function submitQuote() {
+            const form = document.getElementById('addQuoteForm');
+            const formData = new FormData(form);
+            
+            fetch('{{ route('quotes.store') }}', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Accept': 'application/json'
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // إغلاق النافذة المنبثقة
+                    closeAddQuoteModal();
+                    
+                    // إعادة تحميل الصفحة لعرض الاقتباس الجديد
+                    window.location.reload();
+                } else {
+                    alert(data.message || 'حدث خطأ أثناء إضافة الاقتباس');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('حدث خطأ أثناء إضافة الاقتباس');
+            });
         }
 
         // نسخ الرابط إلى الحافظة

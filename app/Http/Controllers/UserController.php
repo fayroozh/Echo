@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Quote;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -29,11 +30,65 @@ class UserController extends Controller
         $query = $request->input('query');
 
         $users = User::where('name', 'like', "%{$query}%")
-            ->orWhere('username', 'like', "%{$query}%")
             ->orWhere('email', 'like', "%{$query}%")
             ->paginate(20);
 
         return view('users.search', compact('users', 'query'));
+    }
+
+    /**
+     * البحث المتقدم
+     */
+    public function advancedSearch(Request $request)
+    {
+        $query = $request->input('query');
+        $types = $request->input('types', []);
+        $dateFrom = $request->input('date_from');
+        $dateTo = $request->input('date_to');
+        $sortBy = $request->input('sort_by', 'created_at');
+        $sortDirection = $request->input('sort_direction', 'desc');
+
+        $results = [];
+
+        if (in_array('users', $types) || empty($types)) {
+            $usersQuery = User::query();
+
+            if ($query) {
+                $usersQuery->where('name', 'like', "%{$query}%")
+                    ->orWhere('email', 'like', "%{$query}%");
+            }
+
+            if ($dateFrom) {
+                $usersQuery->where('created_at', '>=', $dateFrom);
+            }
+
+            if ($dateTo) {
+                $usersQuery->where('created_at', '<=', $dateTo);
+            }
+
+            $results['users'] = $usersQuery->orderBy($sortBy, $sortDirection)->paginate(10);
+        }
+
+        if (in_array('quotes', $types) || empty($types)) {
+            $quotesQuery = Quote::query();
+
+            if ($query) {
+                $quotesQuery->where('content', 'like', "%{$query}%")
+                    ->orWhere('author', 'like', "%{$query}%");
+            }
+
+            if ($dateFrom) {
+                $quotesQuery->where('created_at', '>=', $dateFrom);
+            }
+
+            if ($dateTo) {
+                $quotesQuery->where('created_at', '<=', $dateTo);
+            }
+
+            $results['quotes'] = $quotesQuery->orderBy($sortBy, $sortDirection)->paginate(10);
+        }
+
+        return view('search.advanced', compact('results', 'query', 'types', 'dateFrom', 'dateTo', 'sortBy', 'sortDirection'));
     }
 
     /**
@@ -68,7 +123,6 @@ class UserController extends Controller
 
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'username' => 'required|string|max:255|unique:users,username,' . $user->id,
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
             'bio' => 'nullable|string|max:500',
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -80,7 +134,6 @@ class UserController extends Controller
         }
 
         $user->name = $validated['name'];
-        $user->username = $validated['username'];
         $user->email = $validated['email'];
         $user->bio = $validated['bio'] ?? $user->bio;
         $user->save();

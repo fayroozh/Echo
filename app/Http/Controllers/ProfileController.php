@@ -24,6 +24,27 @@ class ProfileController extends Controller
     }
 
     /**
+     * Display the specified user's profile.
+     */
+    public function show($userId): View
+    {
+        $user = \App\Models\User::findOrFail($userId);
+        $quotes = $user->quotes()->with(['likes', 'reactions', 'comments'])->latest()->paginate(10);
+        $communities = $user->communities()->latest()->take(5)->get();
+
+        $followersCount = $user->followers()->count();
+        $followingCount = $user->following()->count();
+        
+        // التحقق من حالة المتابعة
+        $isFollowing = false;
+        if (auth()->check()) {
+            $isFollowing = auth()->user()->isFollowing($user);
+        }
+
+        return view('profile.show', compact('user', 'quotes', 'communities', 'followersCount', 'followingCount', 'isFollowing'));
+    }
+
+    /**
      * Update the user's profile information.
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
@@ -44,6 +65,18 @@ class ProfileController extends Controller
             // تخزين الصورة الجديدة
             $path = $request->file('profile_image')->store('profile-images', 'public');
             $request->user()->profile_image = $path;
+        }
+
+        // معالجة صورة الغلاف
+        if ($request->hasFile('cover_image')) {
+            // حذف الصورة القديمة إذا وجدت
+            if ($request->user()->cover_image) {
+                Storage::disk('public')->delete($request->user()->cover_image);
+            }
+
+            // تخزين الصورة الجديدة
+            $path = $request->file('cover_image')->store('cover-images', 'public');
+            $request->user()->cover_image = $path;
         }
 
         $request->user()->save();

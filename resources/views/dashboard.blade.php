@@ -8,10 +8,10 @@
     @php
         $user = Auth::user();
         $quotes = $user->quotes()->latest()->take(5)->get();
-        $quotesCount = $user->quotes?->count() ?? 0;
-        $favoritesCount = $user->favorites?->count() ?? 0;
-        $likesCount = $user->likes?->count() ?? 0;
-        $reactionsCount = $user->reactions?->count() ?? 0;
+        $quotesCount = $user->quotes()->count();
+        $favoritesCount = $user->favorites()->count();
+        $likesCount = $user->likes()->count();
+        $reactionsCount = $user->reactions()->count();
         $profileViews = 150;
         $followersCount = $user->followers()->count();
     @endphp
@@ -83,7 +83,7 @@
                         <span class="text-2xl font-bold text-purple-600 dark:text-purple-400">{{ $followersCount }}</span>
                     </div>
                     <h3 class="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">المتابعون</h3>
-                    <a href="{{ route('follows.followers') }}" class="text-xs text-purple-600 hover:text-purple-800 font-medium">عرض المتابعين →</a>
+                    <a href="{{ route('follows.my-followers') }}" class="text-xs text-purple-600 hover:text-purple-800 font-medium">عرض المتابعين →</a>
                 </div>
             </div>
 

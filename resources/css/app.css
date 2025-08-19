@@ -321,3 +321,189 @@
         @apply px-6 py-3 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white rounded-lg font-bold hover:bg-gray-300 dark:hover:bg-gray-600 transition-all duration-300 shadow-md;
     }
 }
+
+/* ======================================
+   4. تحسينات التجاوبية والموبايل
+====================================== */
+@layer utilities {
+    /* تحسينات للشاشات الصغيرة */
+    @media (max-width: 640px) {
+        .hero-title {
+            @apply text-3xl;
+        }
+        
+        .hero-subtitle {
+            @apply text-lg;
+        }
+        
+        .hero-btn {
+            @apply px-6 py-2 text-base;
+        }
+        
+        .quote-card,
+        .quote-card-featured {
+            @apply p-4;
+        }
+        
+        .feature-card {
+            @apply p-4;
+        }
+        
+        .reaction-btn {
+            @apply px-2 py-1 text-xs;
+        }
+    }
+    
+    /* تحسينات للشاشات المتوسطة */
+    @media (min-width: 641px) and (max-width: 1024px) {
+        .hero-title {
+            @apply text-4xl;
+        }
+        
+        .hero-subtitle {
+            @apply text-xl;
+        }
+    }
+    
+    /* تحسينات للمس والتفاعل */
+    @media (hover: none) and (pointer: coarse) {
+        .btn,
+        .reaction-btn,
+        .hero-btn {
+            @apply transform-none;
+        }
+        
+        .quote-card:hover,
+        .quote-card-featured:hover,
+        .feature-card:hover {
+            @apply transform-none shadow-md;
+        }
+    }
+}
+
+/* ======================================
+   5. تحسينات إضافية للواجهة
+====================================== */
+@layer components {
+    /* زر ثانوي محسن للصفحة الرئيسية */
+    .hero-btn-secondary {
+        @apply px-8 py-3 text-lg font-medium rounded-full border-2 border-white text-white hover:bg-white hover:text-blue-600 transition-all transform hover:scale-105 hover:shadow-lg;
+    }
+    
+    /* تحسين النماذج */
+    .form-input {
+        @apply w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100;
+    }
+    
+    .form-label {
+        @apply block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2;
+    }
+    
+    /* تحسين الإشعارات */
+    .notification {
+        @apply fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg transform transition-all duration-300;
+    }
+    
+    .notification-success {
+        @apply bg-green-500 text-white;
+    }
+    
+    .notification-error {
+        @apply bg-red-500 text-white;
+    }
+    
+    .notification-info {
+        @apply bg-blue-500 text-white;
+    }
+    
+    /* تحسين التحميل */
+    .loading-spinner {
+        @apply animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600;
+    }
+    
+    /* تحسين الجداول */
+    .table-responsive {
+        @apply overflow-x-auto;
+    }
+    
+    .table {
+        @apply min-w-full divide-y divide-gray-200 dark:divide-gray-700;
+    }
+    
+    .table-header {
+        @apply bg-gray-50 dark:bg-gray-800;
+    }
+    
+    .table-cell {
+        @apply px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100;
+    }
+}
+
+/* ======================================
+   6. تحسينات الرسوم المتحركة
+====================================== */
+@layer utilities {
+    .animate-float {
+        animation: float 3s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+        0%, 100% {
+            transform: translateY(0px);
+        }
+        50% {
+            transform: translateY(-10px);
+        }
+    }
+    
+    .animate-fade-in {
+        animation: fadeIn 0.5s ease-in-out;
+    }
+    
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .animate-slide-in {
+        animation: slideIn 0.3s ease-out;
+    }
+    
+    @keyframes slideIn {
+        from {
+            transform: translateX(100%);
+        }
+        to {
+            transform: translateX(0);
+        }
+    }
+}
+
+/* ======================================
+   7. تحسينات الطباعة
+====================================== */
+@media print {
+    .no-print {
+        display: none !important;
+    }
+    
+    .print-only {
+        display: block !important;
+    }
+    
+    body {
+        @apply text-black bg-white;
+    }
+    
+    .quote-card,
+    .quote-card-featured {
+        @apply border border-gray-300 shadow-none;
+    }
+}
+

@@ -60,6 +60,70 @@ class CommunityMemberController extends Controller
         return redirect()->back()->with('success', 'تم رفض طلب الانضمام');
     }
 
+    /**
+     * طلب الانضمام للمجتمع
+     */
+    public function join(Request $request, Community $community)
+    {
+        $user = Auth::user();
+
+        // التحقق من أن المستخدم ليس عضواً بالفعل
+        if ($community->isMember($user)) {
+            return back()->with('error', 'أنت عضو في هذا المجتمع بالفعل');
+        }
+
+        // التحقق من وجود طلب انضمام معلق
+        $existingRequest = CommunityMember::where('community_id', $community->id)
+            ->where('user_id', $user->id)
+            ->where('status', 'pending')
+            ->first();
+
+        if ($existingRequest) {
+            return back()->with('error', 'لديك طلب انضمام معلق بالفعل');
+        }
+
+        // إنشاء طلب انضمام
+        $status = $community->is_private ? 'pending' : 'approved';
+
+        CommunityMember::create([
+            'community_id' => $community->id,
+            'user_id' => $user->id,
+            'status' => $status,
+            'role' => 'student'
+        ]);
+
+        $message = $status === 'approved'
+            ? 'تم انضمامك للمجتمع بنجاح'
+            : 'تم إرسال طلب الانضمام، في انتظار الموافقة';
+
+        return back()->with('success', $message);
+    }
+
+    /**
+     * مغادرة المجتمع
+     */
+    public function leave(Request $request, Community $community)
+    {
+        $user = Auth::user();
+
+        // التحقق من أن المستخدم عضو في المجتمع
+        if (!$community->isMember($user)) {
+            return back()->with('error', 'أنت لست عضواً في هذا المجتمع');
+        }
+
+        // التحقق من أن المستخدم ليس مالك المجتمع
+        if ($community->isOwner($user)) {
+            return back()->with('error', 'لا يمكن لمالك المجتمع مغادرته');
+        }
+
+        // حذف العضوية
+        CommunityMember::where('community_id', $community->id)
+            ->where('user_id', $user->id)
+            ->delete();
+
+        return back()->with('success', 'تم مغادرة المجتمع بنجاح');
+    }
+
 
 }
 

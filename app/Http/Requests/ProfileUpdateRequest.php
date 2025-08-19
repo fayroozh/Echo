@@ -19,6 +19,7 @@ class ProfileUpdateRequest extends FormRequest
             'name' => ['string', 'max:255'],
             'email' => ['email', 'max:255', Rule::unique(User::class)->ignore($this->user()->id)],
             'profile_image' => ['nullable', 'image', 'max:1024'], // الحد الأقصى 1 ميجابايت
+            'cover_image' => ['nullable', 'image', 'max:2048'], // الحد الأقصى 2 ميجابايت
             'bio' => ['nullable', 'string', 'max:500'],
             'birthdate' => ['nullable', 'date', 'before:today'],
         ];

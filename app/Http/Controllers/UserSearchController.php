@@ -20,17 +20,15 @@ class UserSearchController extends Controller
         
         $users = User::where('name', 'like', "%{$query}%")
             ->orWhere('email', 'like', "%{$query}%")
-            ->orWhere('username', 'like', "%{$query}%")
             ->limit(10)
-            ->get(['id', 'name', 'username', 'email', 'profile_photo_path']);
+            ->get(['id', 'name', 'email', 'profile_image']);
             
         return response()->json($users->map(function($user) {
             return [
                 'id' => $user->id,
                 'name' => $user->name,
-                'username' => $user->username,
                 'email' => $user->email,
-                'profile_photo' => $user->profile_photo_url,
+                'profile_photo' => $user->profile_image_url,
             ];
         }));
     }

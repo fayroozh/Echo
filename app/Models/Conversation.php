@@ -27,6 +27,15 @@ class Conversation extends Model
 
     public function participants()
     {
-        return collect([$this->userOne, $this->userTwo]);
+        return collect([$this->userOne, $this->userTwo])->filter();
+    }
+
+    /**
+     * الحصول على المستخدم الآخر في المحادثة
+     */
+    public function otherUser()
+    {
+        $currentUserId = auth()->id();
+        return $this->user_one_id == $currentUserId ? $this->userTwo : $this->userOne;
     }
 }

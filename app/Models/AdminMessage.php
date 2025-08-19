@@ -11,6 +11,7 @@ class AdminMessage extends Model
 
     protected $fillable = [
         'user_id',
+        'from_user_id',
         'subject',
         'message',
         'is_read'
@@ -19,5 +20,10 @@ class AdminMessage extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function fromUser()
+    {
+        return $this->belongsTo(User::class, 'from_user_id');
     }
 }

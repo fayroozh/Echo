@@ -21,7 +21,7 @@ class Community extends Model
         'is_private',
         'status',
         'category_id',
-        'user_id', // هذا هو مالك المجتمع
+        'owner_id', // هذا هو مالك المجتمع
         'approved_at',
     ];
 
@@ -40,7 +40,7 @@ class Community extends Model
      */
     public function owner()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class, 'owner_id');
     }
 
     /**
@@ -57,7 +57,7 @@ class Community extends Model
     public function members()
     {
         return $this->belongsToMany(User::class, 'community_members')
-            ->withPivot('role')
+            ->withPivot('role', 'status')
             ->withTimestamps();
     }
 
@@ -67,6 +67,14 @@ class Community extends Model
     public function posts()
     {
         return $this->hasMany(CommunityPost::class);
+    }
+
+    /**
+     * علاقة المنشورات المعلقة
+     */
+    public function postsPending()
+    {
+        return $this->hasMany(CommunityPost::class)->where('status', 'pending');
     }
 
     // نطاق المجتمعات الموافق عليها
@@ -104,7 +112,7 @@ class Community extends Model
         if (!$user) {
             $user = Auth::user();
         }
-        return $user ? $this->user_id === $user->id : false;
+        return $user ? $this->owner_id === $user->id : false;
     }
 
     /**
@@ -128,11 +136,11 @@ class Community extends Model
         }
         return $user ? $this->followers()->where('user_id', $user->id)->exists() : false;
     }
-public function joinRequests()
+    public function joinRequests()
     {
         // Change to use CommunityMember model with pending status
         return $this->hasMany(CommunityMember::class)
-                    ->where('status', 'pending');
+            ->where('status', 'pending');
     }
 
     public function hasPendingJoinRequest()
@@ -148,12 +156,12 @@ public function joinRequests()
             ->wherePivot('status', 'pending')
             ->exists();
     }
-   
-public function followRequests()
+
+    public function followRequests()
     {
         return $this->belongsToMany(User::class, 'community_followers')
-                    ->wherePivot('status', 'pending')
-                    ->withTimestamps();
+            ->wherePivot('status', 'pending')
+            ->withTimestamps();
     }
 
     public function hasPendingFollowRequest()
@@ -170,15 +178,17 @@ public function followRequests()
             ->exists();
     }
     public function hasRatedBy($user)
-{
-    if (!$user) {
-        return false;
+    {
+        if (!$user) {
+            return false;
+        }
+
+        return $this->ratings()
+            ->where('user_id', $user->id)
+            ->exists();
     }
 
-    return $this->ratings()
-                ->where('user_id', $user->id)
-                ->exists();
-}
 
 
+    // تم إزالة creator() لأننا نستخدم owner()
 }

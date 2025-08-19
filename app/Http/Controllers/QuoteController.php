@@ -13,7 +13,7 @@ class QuoteController extends Controller
 {
     public function index(Request $request)
     {
-        $quotes = Quote::query();
+        $quotes = Quote::with(['user', 'likes', 'reactions', 'comments.user']);
 
         // فلترة حسب الشعور أو التصنيف
         if ($request->filled('feeling')) {
@@ -51,16 +51,30 @@ class QuoteController extends Controller
 
         $quote = Quote::create($data);
 
-        return response()->json([
-            'success' => true,
-            'quote' => $quote
-        ]);
+        // إعادة التوجيه للمكتبة مع رسالة نجاح
+        return redirect()->route('quotes.index')->with('success', 'تم إضافة الاقتباس بنجاح!');
     }
 
     public function show(Quote $quote)
     {
-        return view('quotes.show', compact('quote'));
+        $quote->load(['user', 'likes', 'reactions', 'comments.user']);
+
+        $isFollowing = false;
+
+        if (auth()->check() && $quote->user && $quote->user->id !== auth()->id()) {
+            $isFollowing = auth()->user()->isFollowing($quote->user);
+        }
+
+        // إضافة المتغيرات المطلوبة للواجهة
+        $conversations = \App\Models\Conversation::where('user_one_id', auth()->id())
+            ->orWhere('user_two_id', auth()->id())
+            ->get();
+
+        $users = \App\Models\User::where('id', '!=', auth()->id())->get();
+
+        return view('quotes.show', compact('quote', 'isFollowing', 'conversations', 'users'));
     }
+
 
     public function toggleLike(Request $request, Quote $quote)
     {
@@ -109,7 +123,7 @@ class QuoteController extends Controller
 
         $comment = $quote->comments()->create([
             'user_id' => auth()->id(),
-            'comment' => $request->content
+            'comment' => $request->comment  // Changed from $request->content to $request->comment
         ]);
 
         return response()->json([
@@ -124,7 +138,7 @@ class QuoteController extends Controller
         // هون مؤقتاً فقط استجابة نجاح
         return response()->json(['success' => true]);
     }
-    
+
 
     public function favorite(Request $request, Quote $quote)
     {
@@ -159,5 +173,58 @@ class QuoteController extends Controller
             'success' => true,
             'content' => $quote->content
         ]);
+    }
+
+    /**
+     * عرض اقتباس عشوائي
+     */
+    public function random()
+    {
+        $quote = Quote::inRandomOrder()->first();
+
+        if (!$quote) {
+            return redirect()->route('quotes.index')->with('error', 'لا توجد اقتباسات متاحة');
+        }
+
+        return redirect()->route('quotes.show', $quote);
+    }
+
+    /**
+     * عرض نموذج تعديل الاقتباس
+     */
+    public function edit(Quote $quote)
+    {
+        $this->authorize('update', $quote);
+
+        return view('quotes.edit', compact('quote'));
+    }
+
+    /**
+     * تحديث الاقتباس
+     */
+    public function update(Request $request, Quote $quote)
+    {
+        $this->authorize('update', $quote);
+
+        $request->validate([
+            'content' => 'required|string|max:2000',
+            'image' => 'nullable|image|max:2048',
+            'category_id' => 'nullable|integer',
+            'feeling' => 'nullable|string|max:255'
+        ]);
+
+        $data = $request->only(['content', 'category_id', 'feeling']);
+
+        if ($request->hasFile('image')) {
+            // حذف الصورة القديمة إذا وجدت
+            if ($quote->image) {
+                Storage::disk('public')->delete($quote->image);
+            }
+            $data['image'] = $request->file('image')->store('quotes', 'public');
+        }
+
+        $quote->update($data);
+
+        return redirect()->route('quotes.show', $quote)->with('success', 'تم تحديث الاقتباس بنجاح!');
     }
 }

@@ -39,7 +39,7 @@ class ConversationController extends Controller
     }
 
     // إضافة دالة بدء المحادثة
-    public function start(Request $request, $userId)
+    public function start($userId)
     {
         $currentUserId = Auth::id();
         $targetUser = User::findOrFail($userId);

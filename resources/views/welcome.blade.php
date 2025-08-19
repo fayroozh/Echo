@@ -83,7 +83,7 @@
                     <p class="hero-subtitle">منصة لمشاركة وحفظ الاقتباسات المفضلة لديك</p>
                     <div class="mt-8 flex justify-center space-x-4 space-x-reverse">
                         <a href="{{ route('register') }}" class="hero-btn">ابدأ الآن</a>
-                        <a href="{{ route('guest-quotes.index') }}" class="hero-btn-secondary">استعرض مشاعر الآخرين</a>
+                        <a href="{{ route('communities.index') }}" class="hero-btn-secondary">استعرض المجتمعات</a>
                     </div>
                 </div>
             </div>
@@ -328,45 +328,24 @@
                 <div class="flex flex-wrap justify-center gap-4" data-aos="fade-up" data-aos-delay="200">
                     <a href="{{ route('register') }}" class="cta-btn-primary">إنشاء حساب</a>
                     <a href="{{ route('login') }}" class="cta-btn-secondary">تسجيل الدخول</a>
-                    <a href="{{ route('guest-quotes.create') }}" class="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg">
+                    <a href="{{ route('communities.create') }}" class="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg">
                         💭 شارك مشاعرك
                     </a>
                 </div>
             </div>
         </div>
 
-        <!-- Footer -->
-        <footer class="site-footer">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 py-8">
-                    <div>
-                        <h3 class="text-lg font-bold text-gray-800 dark:text-gray-200 mb-4">Echo | صدى</h3>
-                        <p class="text-gray-800 dark:text-gray-400">منصة لمشاركة وحفظ الاقتباسات المفضلة لديك</p>
-                    </div>
-                    <div>
-                        <h3 class="text-lg font-bold text-gray-800 dark:text-gray-200 mb-4">روابط سريعة</h3>
-                        <ul class="space-y-2">
-                            <li><a href="#" class="text-gray-800 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400">الصفحة الرئيسية</a></li>
-                            <li><a href="#" class="text-gray-800 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400">استكشف الاقتباسات</a></li>
-                            <li><a href="#" class="text-gray-800 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400">المؤلفون</a></li>
-                            <li><a href="#" class="text-gray-800 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400">المواضيع</a></li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h3 class="text-lg font-bold text-gray-800 dark:text-gray-200 mb-4">تواصل معنا</h3>
-                        <ul class="space-y-2">
-                            <li><a href="#" class="text-gray-800 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400">حول المنصة</a></li>
-                            <li><a href="#" class="text-gray-800 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400">سياسة الخصوصية</a></li>
-                            <li><a href="#" class="text-gray-800 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400">شروط الاستخدام</a></li>
-                            <li><a href="#" class="text-gray-800 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400">اتصل بنا</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="border-t border-gray-200 dark:border-gray-700 pt-6 pb-4 text-center">
-                    <p class="text-gray-700 dark:text-gray-400 text-sm">© {{ date('Y') }} Echo | صدى - منصة الاقتباسات. جميع الحقوق محفوظة.</p>
+        <!-- Call to Action Section -->
+        <div class="py-16 bg-gradient-to-r from-blue-600 to-purple-600">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <h2 class="text-3xl font-bold text-white mb-4" data-aos="fade-up">انضم إلينا اليوم</h2>
+                <p class="text-xl text-blue-100 mb-8" data-aos="fade-up" data-aos-delay="100">سجل الآن واستمتع بتجربة فريدة في عالم الاقتباسات الملهمة</p>
+                <div class="flex justify-center space-x-4 space-x-reverse" data-aos="fade-up" data-aos-delay="200">
+                    <a href="{{ route('register') }}" class="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-all duration-300 transform hover:scale-105">ابدأ الآن</a>
+                    <a href="{{ route('communities.index') }}" class="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition-all duration-300 transform hover:scale-105">استعرض المحتوى</a>
                 </div>
             </div>
-        </footer>
+        </div>
     </div>
 
     <!-- AOS Init Script -->

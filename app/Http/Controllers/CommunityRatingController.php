@@ -7,18 +7,16 @@ use Illuminate\Http\Request;
 
 class CommunityRatingController extends Controller
 {
-    public function store(Request $request, $communityId)
+    public function store(Request $request, Community $community)
     {
         $request->validate([
             'stars' => 'required|integer|min:1|max:5',
         ]);
 
-        $community = Community::findOrFail($communityId);
-
         $userId = auth()->id();
 
         // تحقق هل المستخدم قيم المجتمع مسبقاً
-        $existing = CommunityRating::where('community_id', $communityId)
+        $existing = CommunityRating::where('community_id', $community->id)
             ->where('user_id', $userId)
             ->first();
 
@@ -27,7 +25,7 @@ class CommunityRatingController extends Controller
             $existing->save();
         } else {
             CommunityRating::create([
-                'community_id' => $communityId,
+                'community_id' => $community->id,
                 'user_id' => $userId,
                 'stars' => $request->stars,
             ]);

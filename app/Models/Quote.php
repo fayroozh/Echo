@@ -94,10 +94,6 @@ class Quote extends Model
     {
         return $this->morphMany(Report::class, 'reportable');
     }
-    public function someMethod()
-    {
-        return Quote::inRandomOrder()->first();
-    }
 
     public static function random()
     {

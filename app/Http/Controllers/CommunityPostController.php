@@ -42,7 +42,18 @@ class CommunityPostController extends Controller
 
         return redirect()->route('communities.show', $community->id)->with('success', 'تم إرسال المنشور للمراجعة.');
     }
-    public function pendingPosts($communityId)
+
+    public function show($communityId, $postId)
+    {
+        $community = Community::findOrFail($communityId);
+        $post = CommunityPost::with('user')->where('community_id', $communityId)
+            ->where('id', $postId)
+            ->where('status', 'approved')
+            ->firstOrFail();
+
+        return view('community-posts.show', compact('community', 'post'));
+    }
+    public function pending($communityId)
     {
         $community = Community::with([
             'posts' => function ($q) {

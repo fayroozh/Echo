@@ -13,7 +13,13 @@ class Category extends Model
         'name',
         'slug',
         'description',
-        'icon'
+        'color',
+        'icon',
+        'is_active',
+    ];
+
+    protected $casts = [
+        'is_active' => 'boolean',
     ];
 
     /**
@@ -22,5 +28,10 @@ class Category extends Model
     public function communities()
     {
         return $this->hasMany(Community::class);
+    }
+
+    public function getRouteKeyName()
+    {
+        return 'slug';
     }
 }
